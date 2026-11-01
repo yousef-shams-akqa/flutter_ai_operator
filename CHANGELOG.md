@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.2
+
+- Updated and improved example.
+
 ## 0.1.1
 
 - Added a commented usage example.
