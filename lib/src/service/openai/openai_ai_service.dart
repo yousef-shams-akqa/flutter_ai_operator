@@ -42,10 +42,11 @@ class OpenAIService implements AIService {
   final AiActionHandler actionHandler;
 
   @override
-  Future<String> send(List<ChatMessage> messages, {String? appContext}) async {
+  Future<String> send(List<ChatMessage> messages, {String? additionalContext}) async {
     final requestMessages = prepareChatMessages(
       messages,
-      appContext: appContext,
+      contextSources: configuration.contextSources,
+      additionalContext: additionalContext,
     );
     final tools = _functionMapper
         .toolsFromDefinitions(configuration.functionDefinitions)

@@ -3,7 +3,9 @@
 ## Purpose
 
 [flutter_app_copilot_example.dart](flutter_app_copilot_example.dart) shows the
-whole package flow in one file, with short numbered comments and no UI.
+whole package flow in one file, with short numbered comments and no UI. It also
+shows navigation: `exampleRouter`, at the bottom of the file, is a small
+`GoRouter` that the model can read and move through.
 
 ## Entry Points
 
@@ -20,6 +22,11 @@ whole package flow in one file, with short numbered comments and no UI.
   → package sends 42 back to the model
   → final AI reply is printed and added to messages
 ```
+
+Navigation works the same way. The handler passes `resetStackTo`, `pushScreen`,
+`replaceTopScreen`, and `popScreen` calls to `GoRouterNavigationAction`, and
+`GoRouterContextSource` tells the model the current stack and routes on every
+request. In a real app, mount the router with `MaterialApp.router` first.
 
 The example owns its conversation in memory; nothing is saved or cached.
 Provider failures are printed and rethrown. Action failures use `Left` so the
@@ -53,6 +60,7 @@ model uses the package's default.
 - To add an action, implement `AiExecutableAction`, describe it in
   `functionDefinitions`, and dispatch it in the handler. Adding it to `actions`
   alone does not register its definition or dispatch.
+- To use your own routes, replace `exampleRouter` with your app's `GoRouter`.
 - To use Claude or Gemini, change the provider and pass that provider's API key
   and model ID.
 

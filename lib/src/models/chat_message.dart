@@ -14,7 +14,4 @@ class ChatMessage {
   }
 }
 
-enum ChatMessageType {
-  user,
-  model,
-}
+enum ChatMessageType { user, model }

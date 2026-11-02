@@ -2,7 +2,7 @@ name: flutter_app_copilot
 description: >-
   Let users control your Flutter app through chat. Turn requests like "turn on
   dark mode" into actions your app runs, using Gemini, OpenAI, or Claude.
-version: 0.2.2
+version: 0.3.0
 repository: https://github.com/yousef-shams-akqa/flutter_ai_operator
 
 environment:

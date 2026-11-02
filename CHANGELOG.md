@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.3.0
+- Add `AIConfiguration.contextSources`: each `AppContextSource` is read on every
+  `send()` and appended to the final user message. `GoRouterContextSource`
+  supplies the router's stack and routes.
+- **Breaking:** `send(appContext:)` is now `send(additionalContext:)`. It is
+  added after the sources.
+- Add `AIProviderContextFailure`, thrown when a context source fails.
+
+## 0.2.3
+- Improve system instructions prompt.
+- Add `GoRouterNavigationAction` and `navigationFunctionDefinitions()` to let
+  the model use `resetStackTo`, `pushScreen`, `replaceTopScreen`, and
+  `popScreen` on a `GoRouter`.
+
 ## 0.2.2
 
 - Add object function parameters with typed `additionalProperties` schemas.
@@ -40,7 +54,7 @@ Initial release.
 - Added a shared `AIService` API and static `AIServiceFactory.create()` entry point
   for Gemini, OpenAI, and Claude.
 - Added caller-supplied configuration, model selection, and complete conversation
-  lists through `send(messages, appContext: ...)`, including the latest user message.
+  lists through `send(messages, additionalContext: ...)`, including the latest user message.
 - Added request snapshots that preserve caller messages and attach app context
   only to the outgoing final user message.
 - Added `AIProviderInvalidInputFailure` for empty conversations, non-user final

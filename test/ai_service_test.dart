@@ -26,7 +26,7 @@ void main() {
       for (final entry in invalidConversations.entries) {
         test('rejects ${entry.key} before contacting the provider', () async {
           await expectLater(
-            fixture.service.send(entry.value, appContext: '\nScreen: home'),
+            fixture.service.send(entry.value, additionalContext: '\nScreen: home'),
             throwsA(
               isA<AIProviderInvalidInputFailure>()
                   .having((failure) => failure.code, 'code', 1005)
@@ -57,7 +57,7 @@ void main() {
           expect(
             await fixture.service.send(
               messages,
-              appContext: '\nScreen: settings',
+              additionalContext: '\nScreen: settings',
             ),
             'Saved',
           );

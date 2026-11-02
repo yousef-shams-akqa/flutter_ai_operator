@@ -211,4 +211,3 @@ class _ProviderClient extends Fake implements AIProviderClient {
     Map<String, dynamic> body,
   ) async => respond(body);
 }
-

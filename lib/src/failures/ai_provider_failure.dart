@@ -50,3 +50,9 @@ class AIProviderInvalidResponseFailure extends AIProviderFailure {
 class AIProviderInvalidInputFailure extends AIProviderFailure {
   AIProviderInvalidInputFailure() : super(1005, 'INVALID_INPUT');
 }
+
+/// An `AppContextSource` threw while being read, so no request was sent.
+/// [message] holds the source's error text.
+class AIProviderContextFailure extends AIProviderFailure {
+  AIProviderContextFailure({super.message}) : super(1006, 'CONTEXT_FAILED');
+}

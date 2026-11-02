@@ -40,10 +40,11 @@ class GeminiAIService implements AIService {
   final AiActionHandler actionHandler;
 
   @override
-  Future<String> send(List<ChatMessage> messages, {String? appContext}) async {
+  Future<String> send(List<ChatMessage> messages, {String? additionalContext}) async {
     final requestMessages = prepareChatMessages(
       messages,
-      appContext: appContext,
+      contextSources: configuration.contextSources,
+      additionalContext: additionalContext,
     );
     final declarations = _functionMapper
         .toolsFromDefinitions(configuration.functionDefinitions)
@@ -129,9 +130,7 @@ class GeminiAIService implements AIService {
     if (name is! String || args is! Map<String, dynamic>) {
       throw AIProviderMalformedToolCallFailure();
     }
-    final result = await actionHandler.handle(
-      FunctionCallResponse(name, args),
-    );
+    final result = await actionHandler.handle(FunctionCallResponse(name, args));
     final payload = result.fold(
       (error) => {'error': error.toString()},
       (value) => {'result': value},

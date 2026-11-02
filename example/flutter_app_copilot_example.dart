@@ -1,5 +1,7 @@
 
+import 'package:flutter/widgets.dart' show SizedBox;
 import 'package:flutter_app_copilot/flutter_app_copilot.dart';
+import 'package:go_router/go_router.dart' show GoRoute, GoRouter;
 
 // 0. Define the function definitions.
 const addNumbersFunctionName = 'add_numbers';
@@ -46,11 +48,20 @@ class AppActionHandler extends AiActionHandler {
   @override
   Future<Either<Error, String>> handle(FunctionCallResponse response) async {
     // Handle the add numbers function.
+    // Ideally we should switch over an enum of your function names here
     if (response.functionName == addNumbersFunctionName) {
       final input = AddNumbersInput.fromJson(response.functionArgs);
       final addNumbersAction = actions.whereType<AddNumbersAction>().first;
       final result = await addNumbersAction.execute(input);
       return result.map((sum) => sum.toString());
+    }
+
+    // Handle the navigation functions the package provides.
+    final method = NavigationMethod.fromFunctionName(response.functionName);
+    if (method != null) {
+      final input = NavigationInput.fromArgs(method, response.functionArgs);
+      if (input.isLeft) return Left(input.left);
+      return actions.whereType<GoRouterNavigationAction>().first.execute(input.right);
     }
 
     // Handle other functions here (if any)...
@@ -66,9 +77,14 @@ Future<void> main() async {
   const apiKey = String.fromEnvironment('OPENAI_API_KEY');
 
   // 4. Describe the same function and arguments to the model.
-  const configuration = AIConfiguration(
+  // The router adds the navigation tools and tells the model where the user is.
+  final configuration = AIConfiguration(
     systemPrompt: 'Always use add_numbers for addition. Reply with the result.',
-    functionDefinitions: functionDefinitionList,
+    functionDefinitions: [
+      ...functionDefinitionList,
+      ...navigationFunctionDefinitions(locations: exampleRouter.routePaths()),
+    ],
+    contextSources: [GoRouterContextSource(exampleRouter)],
   );
 
   // 5. Connect the provider, function definitions, and action handler.
@@ -77,7 +93,10 @@ Future<void> main() async {
     apiKey: apiKey,
     modelName: const String.fromEnvironment('OPENAI_MODEL'),
     configuration: configuration,
-    actionHandler: AppActionHandler([AddNumbersAction()]),
+    actionHandler: AppActionHandler([
+      AddNumbersAction(),
+      GoRouterNavigationAction(exampleRouter),
+    ]),
   );
 
   // 6. Keep the conversation yourself, ending with the user's request.
@@ -108,3 +127,15 @@ class AddNumbersInput {
     return AddNumbersInput(firstNumber, secondNumber);
   }
 }
+
+// A small router for the example. Use your app's own router instead, and mount
+// it with `MaterialApp.router(routerConfig: ...)`: the model's navigation
+// context is only available once the router is on screen.
+final exampleRouter = GoRouter(
+  initialLocation: '/home',
+  routes: [
+    GoRoute(path: '/home', builder: (_, _) => const SizedBox()),
+    GoRoute(path: '/settings', builder: (_, _) => const SizedBox()),
+    GoRoute(path: '/products/:productId', builder: (_, _) => const SizedBox()),
+  ],
+);

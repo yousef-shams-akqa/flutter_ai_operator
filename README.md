@@ -37,6 +37,7 @@ data, and UI.
 | Function calling | Connect model requests to your existing app logic. |
 | Typed failures | Distinguish invalid input, request errors, and unusable replies. |
 | Optional navigation context | Describe the current GoRouter stack and available routes. |
+| Ready-made navigation action | Let the model reset the stack, push, replace, and pop on your GoRouter. |
 
 ## How it works
 
@@ -151,19 +152,80 @@ Add `go_router` as a direct dependency and import it alongside this package:
 ```dart
 import 'package:go_router/go_router.dart';
 
-final reply = await ai.send(messages, appContext: router.getRouterContext());
+final ai = AIServiceFactory.create(
+  provider: AIProvider.openAI,
+  apiKey: apiKey,
+  configuration: AIConfiguration(
+    functionDefinitions: functionDefinitionList,
+    contextSources: [GoRouterContextSource(router)],
+  ),
+  actionHandler: actionHandler,
+);
+
+final reply = await ai.send(messages);
 ```
 
+Pass the router once. `GoRouterContextSource` reads it on every `send()`, so the
+model always sees the current stack. Keep using the same `GoRouter` the app
+navigates with; a router created later is not picked up.
+
 The exported `GoRouterStateContext` extension provides `currentStack()`,
-`routeTree()`, `routeParameterShapes()`, and `getRouterContext()`. This supplies route information as text;
-your app still implements any navigation action exposed to the model. Dynamic
+`routeTree()`, `routePaths()`, `routeParameterShapes()`, and
+`getRouterContext()`. This supplies route information as text. Dynamic
 route placeholders are also listed with their argument shape, such as
 `/products/:productId` with `{"productId": "<string>"}` (optional `:id?`
 placeholders are marked `(optional)`). Path parameter values are always strings.
-Add a `pathParameters` object to your navigation function schema so the model
-can provide those values.
-You can also pass your own context string without GoRouter. Context is appended
-only to the outgoing copy of the final user message.
+
+### Other context
+
+Implement `AppContextSource` to give the model any other live app state:
+
+```dart
+class SelectedProductContext implements AppContextSource {
+  @override
+  String read() => '\nSelected product: ${selectedProduct.name}\n';
+}
+```
+
+Sources are read in list order on every `send()`, and their text is appended
+only to the outgoing copy of the final user message. `send(additionalContext: ...)`
+still works for one-off text and is added after the sources. If a source
+throws, `send()` throws `AIProviderContextFailure` and sends no request.
+
+### Navigation action
+
+Register `GoRouterNavigationAction` and its four tools: `resetStackTo`,
+`pushScreen`, `replaceTopScreen`, and `popScreen`.
+
+```dart
+final navigation = GoRouterNavigationAction(router);
+
+final configuration = AIConfiguration(
+  functionDefinitions: [
+    ...appFunctionDefinitions,
+    ...navigationFunctionDefinitions(locations: router.routePaths()),
+  ],
+);
+
+// Inside your AiActionHandler.handle:
+final method = NavigationMethod.fromFunctionName(response.functionName);
+if (method != null) {
+  final input = NavigationInput.fromArgs(method, response.functionArgs);
+  if (input.isLeft) return Left(input.left);
+  return navigation.execute(input.right);
+}
+```
+
+`locations` limits which paths the model can open; leave it out to allow any.
+The model fills `:placeholders` through `pathParameters`.
+
+Every call is checked against your routes. If the route is unknown, a
+placeholder has no value, or there is nothing to pop, the action returns a
+`NavigationFailure` the model can read instead of navigating. Routes inside a
+`StatefulShellRoute` always open with `resetStackTo`, because pushing them over
+a page outside the shell crashes the Navigator. Navigations are spaced by
+`pauseBetweenNavigations` (2 seconds by default; use `Duration.zero` in tests).
+`extra` and pop results are not supported, since model arguments are plain JSON.
 
 ## Handling failures
 
@@ -205,6 +267,7 @@ app boundary.
 | Provider requests and response parsing | Provider selection, credentials, and Firebase setup |
 | Tool-call continuation and provider failures | Function definitions, argument validation, and actions |
 | Chat models and route-context formatting | Conversation state, storage, and UI |
+| Optional GoRouter navigation action and its tools | Your routes and which ones the model may open |
 
 The API returns complete text replies. Streaming, request cancellation,
 conversation persistence, offline replies, and cache fallback are not included.
