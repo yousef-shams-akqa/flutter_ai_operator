@@ -63,10 +63,56 @@ void main() {
     );
     addTearDown(router.dispose);
 
-    expect(
-      router.routeTree(),
-      'ShellRoute { /home, /settings }, /about',
+    expect(router.routeTree(), 'ShellRoute { /home, /settings }, /about');
+  });
+
+  testWidgets('route parameter shapes cover nested, shell and optional paths', (
+    _,
+  ) async {
+    final router = GoRouter(
+      initialLocation: '/products/1',
+      routes: [
+        ShellRoute(
+          builder: (_, _, child) => child,
+          routes: [
+            GoRoute(
+              path: '/products/:productId',
+              builder: (_, _) => const SizedBox(),
+              routes: [
+                GoRoute(
+                  path: 'reviews/:reviewId',
+                  builder: (_, _) => const SizedBox(),
+                ),
+              ],
+            ),
+          ],
+        ),
+        GoRoute(path: '/users/:userId?', builder: (_, _) => const SizedBox()),
+        GoRoute(path: '/about', builder: (_, _) => const SizedBox()),
+      ],
     );
+    addTearDown(router.dispose);
+
+    expect(
+      router.routeParameterShapes(),
+      '/products/:productId => {"productId": "<string>"}, '
+      '/products/:productId/reviews/:reviewId => '
+      '{"productId": "<string>", "reviewId": "<string>"}, '
+      '/users/:userId? => {"userId": "<string> (optional)"}',
+    );
+  });
+
+  testWidgets('route parameter shapes are empty without dynamic routes', (
+    _,
+  ) async {
+    final router = GoRouter(
+      initialLocation: '/about',
+      routes: [GoRoute(path: '/about', builder: (_, _) => const SizedBox())],
+    );
+    addTearDown(router.dispose);
+
+    expect(router.routeParameterShapes(), isEmpty);
+    expect(router.getRouterContext(), isNot(contains('Dynamic route')));
   });
 
   testWidgets('route tree includes every stateful shell branch', (_) async {

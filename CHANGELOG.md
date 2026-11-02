@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.2
+
+- Add object function parameters with typed `additionalProperties` schemas.
+- Include dynamic route parameter names and argument shapes in GoRouter context.
+- Explain how the model should pass path parameters to navigation tools.
+
 ## 0.2.1
 
 - **Breaking:** `AIServiceFactory.create()` now requires a non-empty `apiKey` parameter.

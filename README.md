@@ -155,8 +155,13 @@ final reply = await ai.send(messages, appContext: router.getRouterContext());
 ```
 
 The exported `GoRouterStateContext` extension provides `currentStack()`,
-`routeTree()`, and `getRouterContext()`. This supplies route information as text;
-your app still implements any navigation action exposed to the model.
+`routeTree()`, `routeParameterShapes()`, and `getRouterContext()`. This supplies route information as text;
+your app still implements any navigation action exposed to the model. Dynamic
+route placeholders are also listed with their argument shape, such as
+`/products/:productId` with `{"productId": "<string>"}` (optional `:id?`
+placeholders are marked `(optional)`). Path parameter values are always strings.
+Add a `pathParameters` object to your navigation function schema so the model
+can provide those values.
 You can also pass your own context string without GoRouter. Context is appended
 only to the outgoing copy of the final user message.
 

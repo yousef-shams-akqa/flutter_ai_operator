@@ -52,11 +52,14 @@ class JsonSchemaFunctionDefinitionMapper {
       FunctionParameterType.number => 'number',
       FunctionParameterType.integer => 'integer',
       FunctionParameterType.boolean => 'boolean',
+      FunctionParameterType.object => 'object',
     };
     return {
       'type': type,
       'description': parameter.description,
       if (parameter.possibleValues.isNotEmpty) 'enum': parameter.possibleValues,
+      if (parameter.additionalProperties case final additionalProperties?)
+        'additionalProperties': _schemaFor(additionalProperties),
     };
   }
 }

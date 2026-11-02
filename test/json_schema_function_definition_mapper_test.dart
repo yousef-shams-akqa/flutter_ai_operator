@@ -63,6 +63,53 @@ void main() {
     );
   });
 
+  test('maps object arguments with typed additional properties', () {
+    const pathParameters = FunctionParameterValue(
+      type: FunctionParameterType.object,
+      description: 'Route placeholder values',
+      additionalProperties: FunctionParameterValue(
+        type: FunctionParameterType.string,
+        description: 'A placeholder value',
+      ),
+    );
+    final schema = mapper.toolsFromDefinitions([
+      const FunctionDefinition(
+        name: 'navigate',
+        description: 'Navigates',
+        parameters: [
+          FunctionParameter(key: 'pathParameters', value: pathParameters),
+        ],
+      ),
+    ]).single['parameters'];
+
+    expect((schema['properties'] as Map)['pathParameters'], {
+      'type': 'object',
+      'description': 'Route placeholder values',
+      'additionalProperties': {
+        'type': 'string',
+        'description': 'A placeholder value',
+      },
+    });
+  });
+
+  test('copyWith keeps additionalProperties unless asked to clear it', () {
+    const withSchema = FunctionParameterValue(
+      type: FunctionParameterType.object,
+      description: 'Map',
+      additionalProperties: FunctionParameterValue(
+        type: FunctionParameterType.number,
+        description: 'Value',
+      ),
+    );
+    final cleared = withSchema.copyWith(clearAdditionalProperties: true);
+
+    expect(
+      withSchema.copyWith(description: 'Other').additionalProperties,
+      isNotNull,
+    );
+    expect(cleared.additionalProperties, isNull);
+  });
+
   test('omits required when all arguments are optional', () {
     final schema = mapper.toolsFromDefinitions([
       definition.copyWith(optionalParameters: ['mode', 'enabled']),

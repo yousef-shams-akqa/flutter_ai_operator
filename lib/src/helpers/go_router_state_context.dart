@@ -17,22 +17,72 @@ extension GoRouterStateContext on GoRouter {
   /// Example: '/home { /home/settings { /home/settings/profile } }'
   String routeTree() {
     String build(List<RouteBase> routes) {
-      return routes.map((route) {
-        final path = route is GoRoute ? route.path : route.runtimeType.toString();
+      return routes
+          .map((route) {
+            final path = route is GoRoute
+                ? route.path
+                : route.runtimeType.toString();
 
-        final children = route is StatefulShellRoute
-            ? route.branches.expand((b) => b.routes).toList()
-            : route.routes;
+            final children = route is StatefulShellRoute
+                ? route.branches.expand((b) => b.routes).toList()
+                : route.routes;
 
-        return children.isEmpty ? path : '$path { ${build(children)} }';
-      }).join(', ');
+            return children.isEmpty ? path : '$path { ${build(children)} }';
+          })
+          .join(', ');
     }
 
     return build(configuration.routes);
   }
 
+  /// Dynamic route paths and the string-map shape used to fill their parameters.
+  /// /products/:productId => {"productId": "<string>"}, /products/:productId/reviews/:reviewId => {"productId": "<string>", "reviewId": "<string>"} 
+  String routeParameterShapes() {
+    final shapes = <String>[];
+
+    void collect(List<RouteBase> routes, {String parentPath = ''}) {
+      for (final route in routes) {
+        if (route is GoRoute) {
+          final path = _joinPath(parentPath, route.path);
+          final placeholders = RegExp(r':([A-Za-z0-9_]+)(\?)?')
+              .allMatches(path)
+              .toList(growable: false);
+          if (placeholders.isNotEmpty) {
+            final values = placeholders
+                .map((match) {
+                  final suffix = match.group(2) == null ? '' : ' (optional)';
+                  return '"${match.group(1)}": "<string>$suffix"';
+                })
+                .join(', ');
+            shapes.add('$path => {$values}');
+          }
+          collect(route.routes, parentPath: path);
+        } else if (route is StatefulShellRoute) {
+          for (final branch in route.branches) {
+            collect(branch.routes, parentPath: parentPath);
+          }
+        } else {
+          collect(route.routes, parentPath: parentPath);
+        }
+      }
+    }
+
+    collect(configuration.routes);
+    return shapes.toSet().join(', ');
+  }
+
+  String _joinPath(String parentPath, String path) {
+    if (path.startsWith('/')) return path;
+    if (parentPath.isEmpty) return path;
+    return parentPath.endsWith('/') ? '$parentPath$path' : '$parentPath/$path';
+  }
+
   /// Returns the current navigation stack and route tree.
   String getRouterContext() {
-    return '\n Current stack: ${currentStack()} \n Route tree: ${routeTree()} \n';
+    final parameterShapes = routeParameterShapes();
+    final parameterContext = parameterShapes.isEmpty
+        ? ''
+        : ' Dynamic route parameters: $parameterShapes \n';
+    return '\n Current stack: ${currentStack()} \n Route tree: ${routeTree()} \n$parameterContext';
   }
 }

@@ -17,7 +17,9 @@ List<ChatMessage> prepareChatMessages(
   }
 
   if (appContext != null && appContext.isNotEmpty) {
-    final lastMessageWithContext = ChatMessage.user(requestMessages.last.message + appContext);
+    final lastMessageWithContext = ChatMessage.user(
+      requestMessages.last.message + appContext,
+    );
     requestMessages[requestMessages.length - 1] = lastMessageWithContext;
   }
 
