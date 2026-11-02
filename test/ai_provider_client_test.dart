@@ -1,4 +1,4 @@
-import 'package:flutter_ai_operator/src/service/shared/ai_provider_client.dart';
+import 'package:flutter_app_copilot/src/service/shared/ai_provider_client.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 

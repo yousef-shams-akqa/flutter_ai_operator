@@ -1,6 +1,5 @@
-import 'dart:io';
 
-import 'package:flutter_ai_operator/flutter_ai_operator.dart';
+import 'package:flutter_app_copilot/flutter_app_copilot.dart';
 
 // 0. Define the function definitions.
 const addNumbersFunctionName = 'add_numbers';
@@ -89,7 +88,7 @@ Future<void> main() async {
     final reply = await ai.send(messages);
     messages.add(ChatMessage.model(reply));
     // Use the updated messages list to update the UI.
-  } on AIProviderFailure catch (failure) {
+  } on AIProviderFailure {
     // 8. Surface failures instead of returning an empty or fake answer.
     rethrow;
   }

@@ -1,8 +1,8 @@
-import 'package:flutter_ai_operator/flutter_ai_operator.dart';
+import 'package:flutter_app_copilot/flutter_app_copilot.dart';
 // Tests intentionally live under lib; flutter_test remains a dev dependency.
 // ignore: depend_on_referenced_packages
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter_ai_operator/src/constants/ai_constants.dart';
+import 'package:flutter_app_copilot/src/constants/ai_constants.dart';
 
 import 'helpers/ai_service_fixture.dart';
 

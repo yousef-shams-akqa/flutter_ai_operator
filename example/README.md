@@ -2,7 +2,7 @@
 
 ## Purpose
 
-[flutter_ai_operator_example.dart](flutter_ai_operator_example.dart) shows the
+[flutter_app_copilot_example.dart](flutter_app_copilot_example.dart) shows the
 whole package flow in one file, with short numbered comments and no UI.
 
 ## Entry Points

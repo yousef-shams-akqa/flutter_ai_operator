@@ -1,4 +1,4 @@
-# Flutter AI Operator
+# Flutter App Copilot
 
 This package lets your app's users prompt AI so it can **execute actions and operations inside your app**, such as:
 
@@ -35,13 +35,13 @@ Requires Flutter with **Dart >=3.13.7 <4.0.0**. Dependencies may impose
 additional platform requirements.
 
 ```bash
-flutter pub add flutter_ai_operator
+flutter pub add flutter_app_copilot
 ```
 
 For a local copy, use a `path:` dependency instead. Import the public API:
 
 ```dart
-import 'package:flutter_ai_operator/flutter_ai_operator.dart';
+import 'package:flutter_app_copilot/flutter_app_copilot.dart';
 ```
 
 ## Quick start
@@ -54,7 +54,7 @@ Your integration has three pieces:
 | `AiExecutableAction` | Implement the operation using your app's logic. |
 | `AiActionHandler` | Match the function name, parse its arguments, and execute the action. |
 
-The [complete calculator example](example/flutter_ai_operator_example.dart)
+The [complete calculator example](example/flutter_app_copilot_example.dart)
 defines `functionDefinitionList`, `AddNumbersAction`, and
 `CalculatorActionHandler`. After defining those pieces in your app, connect
 and call them like this:
@@ -196,7 +196,7 @@ also need handling at your app boundary.
 
 The API returns complete text replies. Streaming, request cancellation,
 conversation persistence, offline replies, and cache fallback are not included.
-Import supported types from `flutter_ai_operator.dart`; `lib/src/` contains
+Import supported types from `flutter_app_copilot.dart`; `lib/src/` contains
 implementation details.
 
 ## License

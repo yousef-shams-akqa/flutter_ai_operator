@@ -1,9 +1,9 @@
-name: flutter_ai_operator
+name: flutter_app_copilot
 description: >-
   Build in-app AI agents in Flutter with one chat API for Gemini, OpenAI, and
   Claude - function calling, typed errors, and optional GoRouter navigation context.
-version: 0.1.2
-repository: https://github.com/yousef-shams-akqa/flutter_ai_operator
+version: 0.1.3
+repository: https://github.com/yousef-shams-akqa/flutter_app_copilot
 homepage: 
 
 environment:
@@ -16,7 +16,7 @@ dependencies:
   dio: ^5.11.1
   firebase_core: ^5.1.0
   firebase_ai: ^5.1.0
-  go_router: ^17.5.0
+  go_router: ^18.1.2
   either_dart: ^1.0.0
 
 dev_dependencies:

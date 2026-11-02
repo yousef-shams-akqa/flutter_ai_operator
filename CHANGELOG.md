@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.3
+
+- Renamed package to `flutter_app_copilot` (formerly `flutter_ai_operator`).
+- Improved navigation guidelines in the system prompt.
+- Upgrade go_router dependency to 18.1.2
+
 ## 0.1.2
 
 - Updated and improved example.
