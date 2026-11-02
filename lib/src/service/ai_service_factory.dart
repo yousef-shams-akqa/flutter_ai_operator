@@ -11,14 +11,14 @@ abstract final class AIServiceFactory {
   /// Builds the service for [provider]. A blank [modelName] uses the
   /// provider's default.
   ///
-  /// [apiKey] is required for every provider (throws [StateError] when missing).
-  /// Every call returns a new service; keep the one the app should use.
+  /// [apiKey] must be non-empty for every provider (throws [StateError] when
+  /// blank). Every call returns a new service; keep the one the app should use.
   static AIService create({
     required AIProvider provider,
     required AIConfiguration configuration,
     required AiActionHandler actionHandler,
+    required String apiKey,
     String? modelName,
-    String? apiKey,
   }) {
     final isValidModelName = modelName?.trim().isNotEmpty ?? false;
     return switch (provider) {
@@ -49,9 +49,9 @@ abstract final class AIServiceFactory {
     };
   }
 
-  static String _requireApiKey(String? apiKey, AIProvider provider) {
-    final trimmedKey = apiKey?.trim();
-    if (trimmedKey == null || trimmedKey.isEmpty) {
+  static String _requireApiKey(String apiKey, AIProvider provider) {
+    final trimmedKey = apiKey.trim();
+    if (trimmedKey.isEmpty) {
       throw StateError('An API key is required for ${provider.name}.');
     }
     return trimmedKey;

@@ -11,6 +11,24 @@ OpenAI, or Claude**, runs model-requested actions through your handler, and
 returns the model's final reply. Your app keeps control of its business rules,
 data, and UI.
 
+## Demo
+
+<table>
+  <tr>
+    <td align="center" width="320">
+      <img src="https://raw.githubusercontent.com/yousef-shams-akqa/flutter_ai_operator/main/doc/demo.gif" alt="Demo of the AI agent turning on dark mode and changing the user's name from chat messages" width="280" />
+    </td>
+    <td valign="middle">
+      <p>In this demo, a user chats with the in-app agent and the app responds:</p>
+      <ol>
+        <li><b>"Turn dark mode on"</b> switches the app's theme.</li>
+        <li><b>"Change my name to Joe"</b> updates the profile and confirms the change.</li>
+      </ol>
+      <p>Each request runs through your own <code>AiActionHandler</code>, so the model only does what your app exposes.</p>
+    </td>
+  </tr>
+</table>
+
 ## Features
 
 | Feature | What it provides |
@@ -171,9 +189,9 @@ Future<Either<AIProviderFailure, String>> sendSafely(
 
 Failures expose `code`, a stable `reason`, and an optional diagnostic `message`.
 Branch on the failure type or stable fields rather than its human-readable text.
-Validate setup separately: missing OpenAI/Claude keys throw `StateError` during
-creation. Firebase setup errors and errors thrown by your own action handler
-also need handling at your app boundary.
+Validate setup separately: a missing or blank `apiKey` throws `StateError` during
+creation. Errors thrown by your own action handler also need handling at your
+app boundary.
 
 ## Responsibilities and scope
 

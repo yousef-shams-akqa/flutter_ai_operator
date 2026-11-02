@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.1
+
+- **Breaking:** `AIServiceFactory.create()` now requires a non-empty `apiKey` parameter.
+- Update README.md to include a demo
+
 ## 0.2.0
 
 - **Breaking:** Gemini now uses the [Generative Language REST API](https://ai.google.dev/api/generate-content)
