@@ -53,8 +53,8 @@ model uses the package's default.
 - To add an action, implement `AiExecutableAction`, describe it in
   `functionDefinitions`, and dispatch it in the handler. Adding it to `actions`
   alone does not register its definition or dispatch.
-- To use Claude, change the provider and pass a Claude key and model ID. Gemini
-  also needs the [Firebase setup](../README.md#set-up-gemini-firebase).
+- To use Claude or Gemini, change the provider and pass that provider's API key
+  and model ID.
 
 ## Testing
 

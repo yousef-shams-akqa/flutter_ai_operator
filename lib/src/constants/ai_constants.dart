@@ -23,10 +23,13 @@ Navigation:
   2. Display or behavior preferences. These rank below content, so visit them earlier and never end on them when content is involved.
 - The final destination is chosen by importance, not by the order the actions were requested or executed.
 - Do not navigate to the same screen twice or bounce back and forth. Each screen is visited at most once.
-- If the user only asks to go somewhere, just navigate.
 
 Reply:
 - Keep the final reply short and in the user's language.
 - Start it with one fitting emoji only when the request was fully completed.
+- Never reply with only emojis and no text.
+
+Important note
+- You must make sure the order of the actions make sense and are logical.
 ''';
 }

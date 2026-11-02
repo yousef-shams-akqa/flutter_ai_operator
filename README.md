@@ -77,7 +77,6 @@ messages.add(ChatMessage.model(reply));
 ```
 
 Supply your provider's API key and a model ID available to your account.
-For Gemini, complete the Firebase setup below before creating the service.
 See the [example guide](example/README.md) for the flow and customization notes.
 
 ### Implementing actions
@@ -120,22 +119,12 @@ function definition or dispatch its calls; implement both explicitly.
 | --- | --- | --- |
 | OpenAI | `AIProvider.openAI` | Supply a non-empty API key. |
 | Claude | `AIProvider.claude` | Supply a non-empty API key. |
-| Gemini | `AIProvider.gemini` | Complete Firebase setup below; omit `apiKey`. |
+| Gemini | `AIProvider.gemini` | Supply a non-empty [Gemini API key](https://ai.google.dev/gemini-api/docs/api-key). |
 
 `modelName` is optional. Omitting it or passing a blank value uses the provider's
 packaged default, available through `AIProvider.defaultModelName`.
 To switch providers, change the factory value and supply the matching credentials
-and model ID. All providers ship together, so Firebase remains a dependency even
-when using OpenAI or Claude.
-
-### Set up Gemini (Firebase)
-
-Complete these steps before creating the Gemini service:
-
-1. [Initialize Firebase in your Flutter app](https://firebase.google.com/docs/flutter/setup).
-2. [Enable Firebase AI Logic](https://firebase.google.com/docs/ai-logic/get-started?platform=flutter).
-3. [Configure Firebase App Check](https://firebase.google.com/docs/app-check/flutter/default-providers).
-4. For local development, [configure the App Check debug provider](https://firebase.google.com/docs/app-check/flutter/debug-provider).
+and model ID.
 
 ## Navigation context
 

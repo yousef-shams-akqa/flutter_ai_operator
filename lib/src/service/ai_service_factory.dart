@@ -11,8 +11,7 @@ abstract final class AIServiceFactory {
   /// Builds the service for [provider]. A blank [modelName] uses the
   /// provider's default.
   ///
-  /// [apiKey] is required for OpenAI and Claude (throws [StateError] if it is
-  /// missing) and ignored for Gemini, which authenticates through Firebase.
+  /// [apiKey] is required for every provider (throws [StateError] when missing).
   /// Every call returns a new service; keep the one the app should use.
   static AIService create({
     required AIProvider provider,
@@ -24,6 +23,7 @@ abstract final class AIServiceFactory {
     final isValidModelName = modelName?.trim().isNotEmpty ?? false;
     return switch (provider) {
       AIProvider.gemini => GeminiAIService(
+        apiKey: _requireApiKey(apiKey, provider),
         modelName: isValidModelName
             ? modelName!.trim()
             : AIProvider.gemini.defaultModelName,

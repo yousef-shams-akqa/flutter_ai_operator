@@ -6,7 +6,7 @@ import '../models/function_definition.dart';
 /// JSON Schema object. Every parameter not listed in
 /// `FunctionDefinition.optionalParameters` is marked required. Each provider
 /// service wraps the item in its own tool envelope (OpenAI adds `type`, Claude
-/// renames `parameters` to `input_schema`, Gemini sends it as
+/// renames `parameters` to `input_schema`, Gemini maps `parameters` to
 /// `parametersJsonSchema`).
 class JsonSchemaFunctionDefinitionMapper {
   const JsonSchemaFunctionDefinitionMapper();

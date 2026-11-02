@@ -19,7 +19,7 @@ class AIProviderFailure extends Error {
 }
 
 /// The request failed. [code] is the HTTP status, or 0 when there is none
-/// (offline, timeout, or Gemini, whose SDK hides the status). [message] is the
+/// (offline or timeout). [message] is the
 /// provider's error text if any.
 class AIProviderRequestFailure extends AIProviderFailure {
   AIProviderRequestFailure({int? statusCode, super.message})

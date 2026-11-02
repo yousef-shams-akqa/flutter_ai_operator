@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.2.0
+
+- **Breaking:** Gemini now uses the [Generative Language REST API](https://ai.google.dev/api/generate-content)
+- Dropped `firebase_core` and `firebase_ai` package dependencies.
+
+- This package should now support Windows, MacOS and Linux.
+
 ## 0.1.3
 
 - Renamed package to `flutter_app_copilot` (formerly `flutter_ai_operator`).
